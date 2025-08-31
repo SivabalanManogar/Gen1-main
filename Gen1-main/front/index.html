@@ -1,0 +1,1755 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GenAI Adaptive Learning Platform</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    firebase.auth().onAuthStateChanged((user) => {
+      if (!user) {
+        // If not logged in, redirect back to login
+        window.location.href = "login.html";
+      }
+    });
+  </script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+
+    body { font-family: 'Inter', sans-serif; }
+
+    
+
+    .gradient-bg {
+
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+    }
+
+    
+
+    .gradient-text {
+
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+      -webkit-background-clip: text;
+
+      -webkit-text-fill-color: transparent;
+
+      background-clip: text;
+
+    }
+
+    
+
+    .hover-lift {
+
+      transition: all 0.3s ease;
+
+    }
+
+    
+
+    .hover-lift:hover {
+
+      transform: translateY(-5px);
+
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+
+    }
+
+    
+
+    .floating {
+
+      animation: float 6s ease-in-out infinite;
+
+    }
+
+    
+
+    @keyframes float {
+
+      0%, 100% { transform: translateY(0px); }
+
+      50% { transform: translateY(-15px); }
+
+    }
+
+    
+
+    .fade-in {
+
+      opacity: 0;
+
+      transform: translateY(20px);
+
+      transition: all 0.6s ease;
+
+    }
+
+    
+
+    .fade-in.visible {
+
+      opacity: 1;
+
+      transform: translateY(0);
+
+    }
+
+
+
+    .action-buttons {
+
+      opacity: 0;
+
+      transform: translateY(-10px);
+
+      transition: all 0.3s ease;
+
+    }
+
+
+
+    .action-buttons.show {
+
+      opacity: 1;
+
+      transform: translateY(0);
+
+    }
+
+
+
+    .copy-success {
+
+      animation: copyPulse 0.6s ease;
+
+    }
+
+
+
+    @keyframes copyPulse {
+
+      0% { transform: scale(1); }
+
+      50% { transform: scale(1.05); }
+
+      100% { transform: scale(1); }
+
+    }
+
+
+
+    .pdf-content {
+
+      line-height: 1.6;
+
+      color: #374151;
+
+    }
+
+
+
+    /* ChatGPT-like formatting for generated content */
+
+    .ai-content {
+
+      line-height: 1.7;
+
+    }
+
+
+
+    .ai-content h1, .ai-content h2, .ai-content h3 {
+
+      font-weight: 700;
+
+      margin: 1.5em 0 0.8em 0;
+
+      color: #1f2937;
+
+    }
+
+
+
+    .ai-content h1 {
+
+      font-size: 1.5em;
+
+      border-bottom: 2px solid #e5e7eb;
+
+      padding-bottom: 0.5em;
+
+    }
+
+
+
+    .ai-content h2 {
+
+      font-size: 1.3em;
+
+      color: #2563eb;
+
+    }
+
+
+
+    .ai-content h3 {
+
+      font-size: 1.1em;
+
+      color: #4338ca;
+
+    }
+
+
+
+    .ai-content p {
+
+      margin: 1em 0;
+
+      text-align: justify;
+
+    }
+
+
+
+    .ai-content ul, .ai-content ol {
+
+      margin: 1em 0;
+
+      padding-left: 1.5em;
+
+    }
+
+
+
+    .ai-content li {
+
+      margin: 0.5em 0;
+
+    }
+
+
+
+    .ai-content ul li::marker {
+
+      content: "• ";
+
+      color: #3b82f6;
+
+      font-weight: bold;
+
+    }
+
+
+
+    .ai-content ol li {
+
+      padding-left: 0.5em;
+
+    }
+
+
+
+    .ai-content blockquote {
+
+      border-left: 4px solid #3b82f6;
+
+      background: #f8fafc;
+
+      margin: 1.5em 0;
+
+      padding: 1em 1.5em;
+
+      border-radius: 0 8px 8px 0;
+
+    }
+
+
+
+    .ai-content code {
+
+      background: #f3f4f6;
+
+      padding: 2px 6px;
+
+      border-radius: 4px;
+
+      font-family: 'Monaco', 'Consolas', monospace;
+
+      font-size: 0.9em;
+
+    }
+
+
+
+    .ai-content pre {
+
+      background: #1f2937;
+
+      color: #f9fafb;
+
+      padding: 1.5em;
+
+      border-radius: 8px;
+
+      overflow-x: auto;
+
+      margin: 1.5em 0;
+
+    }
+
+
+
+    .ai-content pre code {
+
+      background: none;
+
+      padding: 0;
+
+      color: inherit;
+
+    }
+
+
+
+    .ai-content .learning-objective {
+
+      background: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
+
+      border-left: 5px solid #3b82f6;
+
+      padding: 1em;
+
+      margin: 1.5em 0;
+
+      border-radius: 0 8px 8px 0;
+
+    }
+
+
+
+    .ai-content .key-concept {
+
+      background: #fef3c7;
+
+      border: 1px solid #fbbf24;
+
+      padding: 1em;
+
+      border-radius: 8px;
+
+      margin: 1em 0;
+
+    }
+
+
+
+    .ai-content .exercise-box {
+
+      background: #f0fdf4;
+
+      border: 2px solid #16a34a;
+
+      padding: 1.5em;
+
+      border-radius: 10px;
+
+      margin: 1.5em 0;
+
+    }
+
+
+
+    .ai-content .tip-box {
+
+      background: #fef7ff;
+
+      border: 1px solid #c084fc;
+
+      padding: 1em;
+
+      border-radius: 8px;
+
+      margin: 1em 0;
+
+    }
+
+
+
+    .ai-content table {
+
+      width: 100%;
+
+      border-collapse: collapse;
+
+      margin: 1.5em 0;
+
+      border-radius: 8px;
+
+      overflow: hidden;
+
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+    }
+
+
+
+    .ai-content th, .ai-content td {
+
+      padding: 12px;
+
+      text-align: left;
+
+      border-bottom: 1px solid #e5e7eb;
+
+    }
+
+
+
+    .ai-content th {
+
+      background: #f8fafc;
+
+      font-weight: 600;
+
+      color: #374151;
+
+    }
+
+
+
+    .ai-content .highlight {
+
+      background: #fef3c7;
+
+      padding: 2px 4px;
+
+      border-radius: 4px;
+
+      font-weight: 500;
+
+    }
+
+    
+
+    /* Mobile menu animation */
+
+    .mobile-menu-slide {
+
+      transition: all 0.3s ease-in-out;
+
+    }
+
+    
+
+    .mobile-menu-slide.hidden {
+
+      transform: translateY(-100%);
+
+      opacity: 0;
+
+    }
+
+    
+
+    .mobile-menu-slide:not(.hidden) {
+
+      transform: translateY(0);
+
+      opacity: 1;
+
+    }
+
+  </style>
+
+</head>
+
+<body class="bg-gray-50">
+
+
+
+  <nav class="bg-white shadow-lg fixed w-full z-50">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="flex justify-between h-16">
+
+        <div class="flex items-center">
+
+          <h1 class="text-xl font-bold gradient-text">GenAI Adaptive Learning</h1>
+
+        </div>
+
+        
+
+        <!-- Desktop Navigation -->
+
+        <div class="hidden md:flex items-center space-x-8">
+
+          <a href="#home" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Home</a>
+
+          <a href="#features" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Features</a>
+
+          <a href="#process" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">Process</a>
+
+          <a href="#generator" class="text-gray-700 hover:text-blue-600 font-medium transition-colors">AI Generator</a>
+
+        </div>
+
+        
+
+        <!-- Mobile menu button -->
+
+        <div class="md:hidden flex items-center">
+
+          <button id="mobile-menu-button" class="text-gray-600 hover:text-blue-600 focus:outline-none focus:text-blue-600 transition-colors">
+
+            <!-- Hamburger icon -->
+
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+
+            </svg>
+
+            <!-- Close icon (hidden by default) -->
+
+            <svg class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+
+            </svg>
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    
+
+    <!-- Mobile Navigation Menu -->
+
+    <div id="mobile-menu" class="md:hidden hidden mobile-menu-slide">
+
+      <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200 shadow-lg">
+
+        <a href="#home" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-all mobile-menu-link">Home</a>
+
+        <a href="#features" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-all mobile-menu-link">Features</a>
+
+        <a href="#process" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-all mobile-menu-link">Process</a>
+
+        <a href="#generator" class="block px-3 py-2 text-gray-700 hover:text-blue-600 hover:bg-gray-50 rounded-md font-medium transition-all mobile-menu-link">AI Generator</a>
+
+      </div>
+
+    </div>
+
+  </nav>
+
+
+
+  <section id="home" class="pt-20 pb-16 gradient-bg text-white">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+      <div class="floating">
+
+        <h2 class="text-5xl md:text-6xl font-bold mb-6">
+
+          Adaptive Learning Materials
+
+          <span class="block text-yellow-300">Generated Instantly</span>
+
+        </h2>
+
+      </div>
+
+      <p class="text-xl mb-8 max-w-3xl mx-auto">
+
+        Transform basic curriculum outlines into personalized, adaptive learning experiences. 
+
+        Our GenAI platform automatically creates interactive exercises tailored to individual learning speeds and preferences at scale.
+
+      </p>
+
+      <div class="space-y-4 sm:space-y-0 sm:space-x-4 sm:flex justify-center">
+
+        <a href="#generator" class="inline-block bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg shadow-lg hover:bg-gray-100 transition-all">
+
+          🚀 Generate Learning Materials
+
+        </a>
+
+        <a href="#process" class="inline-block bg-transparent border-2 border-white text-white px-8 py-4 rounded-xl font-semibold text-lg hover:bg-white hover:text-blue-600 transition-all">
+
+          📖 See How It Works
+
+        </a>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section id="features" class="py-16 bg-white">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h3 class="text-4xl font-bold text-center gradient-text mb-12">Platform Capabilities</h3>
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <div class="bg-gray-50 rounded-xl p-8 hover-lift fade-in">
+
+          <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center text-2xl text-white mb-6">🧠</div>
+
+          <h4 class="text-xl font-bold mb-4">Intelligent Content Generation</h4>
+
+          <p class="text-gray-600">Upload basic curriculum outlines and watch as our GenAI creates comprehensive learning modules with exercises, quizzes, and interactive content.</p>
+
+        </div>
+
+        
+
+        <div class="bg-gray-50 rounded-xl p-8 hover-lift fade-in">
+
+          <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center text-2xl text-white mb-6">⚡</div>
+
+          <h4 class="text-xl font-bold mb-4">Adaptive Learning Engine</h4>
+
+          <p class="text-gray-600">Dynamic content adjustment based on individual learning speeds, preferences, and comprehension levels. Personalized learning journeys that evolve in real-time.</p>
+
+        </div>
+
+        
+
+        <div class="bg-gray-50 rounded-xl p-8 hover-lift fade-in">
+
+          <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-teal-500 rounded-lg flex items-center justify-center text-2xl text-white mb-6">🌍</div>
+
+          <h4 class="text-xl font-bold mb-4">Scalable Personalization</h4>
+
+          <p class="text-gray-600">Deliver personalized learning experiences to thousands of students simultaneously. Handle massive scale while maintaining individual attention.</p>
+
+        </div>
+
+        
+
+        <div class="bg-gray-50 rounded-xl p-8 hover-lift fade-in">
+
+          <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-500 rounded-lg flex items-center justify-center text-2xl text-white mb-6">📊</div>
+
+          <h4 class="text-xl font-bold mb-4">Learning Analytics</h4>
+
+          <p class="text-gray-600">Comprehensive insights into learning patterns, progress tracking, and performance optimization. Data-driven recommendations for improved outcomes.</p>
+
+        </div>
+
+        
+
+        <div class="bg-gray-50 rounded-xl p-8 hover-lift fade-in">
+
+          <div class="w-12 h-12 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center text-2xl text-white mb-6">🎮</div>
+
+          <h4 class="text-xl font-bold mb-4">Interactive Exercises</h4>
+
+          <p class="text-gray-600">Automatically generate engaging, interactive exercises including simulations, games, and multimedia content that make learning enjoyable.</p>
+
+        </div>
+
+        
+
+        <div class="bg-gray-50 rounded-xl p-8 hover-lift fade-in">
+
+          <div class="w-12 h-12 bg-gradient-to-r from-pink-500 to-rose-500 rounded-lg flex items-center justify-center text-2xl text-white mb-6">🚀</div>
+
+          <h4 class="text-xl font-bold mb-4">Instant Deployment</h4>
+
+          <p class="text-gray-600">From curriculum outline to fully functional learning module in minutes. Rapid deployment with continuous optimization based on learner feedback.</p>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section id="process" class="py-16 bg-gray-50">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h3 class="text-4xl font-bold text-center gradient-text mb-12">How It Works</h3>
+
+      <div class="grid md:grid-cols-4 gap-8">
+
+        <div class="text-center fade-in">
+
+          <div class="bg-gradient-to-r from-blue-500 to-cyan-500 rounded-xl p-8 text-white mb-6 hover-lift">
+
+            <div class="text-3xl mb-4">📝</div>
+
+            <h4 class="text-xl font-bold mb-2">1. Upload Curriculum</h4>
+
+            <p class="text-sm">Provide basic topic outlines, learning objectives, or syllabus content in any format.</p>
+
+          </div>
+
+        </div>
+
+        
+
+        <div class="text-center fade-in">
+
+          <div class="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-8 text-white mb-6 hover-lift">
+
+            <div class="text-3xl mb-4">🧠</div>
+
+            <h4 class="text-xl font-bold mb-2">2. AI Analysis</h4>
+
+            <p class="text-sm">GenAI analyzes content depth, identifies key concepts, and determines optimal learning sequences.</p>
+
+          </div>
+
+        </div>
+
+       
+
+        <div class="text-center fade-in">
+
+          <div class="bg-gradient-to-r from-green-500 to-teal-500 rounded-xl p-8 text-white mb-6 hover-lift">
+
+            <div class="text-3xl mb-4">⚡</div>
+
+            <h4 class="text-xl font-bold mb-2">3. Content Generation</h4>
+
+            <p class="text-sm">Automatically creates lessons, exercises, assessments, and interactive elements for different learning styles.</p>
+
+          </div>
+
+        </div>
+
+        
+
+        <div class="text-center fade-in">
+
+          <div class="bg-gradient-to-r from-orange-500 to-red-500 rounded-xl p-8 text-white mb-6 hover-lift">
+
+            <div class="text-3xl mb-4">🎯</div>
+
+            <h4 class="text-xl font-bold mb-2">4. Adaptive Delivery</h4>
+
+            <p class="text-sm">Deploy personalized content that continuously adapts based on learner progress and performance analytics.</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section id="generator" class="py-16 bg-white">
+
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <div class="bg-gray-50 rounded-2xl p-8 shadow-lg">
+
+        <div class="text-center mb-8">
+
+          <h3 class="text-3xl font-bold gradient-text mb-4">AI Learning Materials Generator</h3>
+
+          <p class="text-lg text-gray-600">Transform your curriculum into personalized, adaptive learning experiences</p>
+
+        </div>
+
+
+
+        <div class="mb-6">
+
+          <p class="text-center text-gray-600 mb-4 font-medium">Try these sample curriculum outlines:</p>
+
+          <div class="flex flex-wrap gap-3 justify-center">
+
+            <button class="sample-btn bg-blue-100 hover:bg-blue-200 text-blue-800 px-4 py-2 rounded-lg text-sm font-medium transition-all" 
+
+                    data-prompt="Create adaptive learning materials for: Introduction to Machine Learning - covering supervised learning, unsupervised learning, neural networks, and practical applications">
+
+              Machine Learning Course
+
+            </button>
+
+            <button class="sample-btn bg-green-100 hover:bg-green-200 text-green-800 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+
+                    data-prompt="Generate personalized content for: High School Biology - Cell structure, photosynthesis, genetics, evolution, and ecology with interactive exercises">
+
+              Biology Curriculum
+
+            </button>
+
+            <button class="sample-btn bg-purple-100 hover:bg-purple-200 text-purple-800 px-4 py-2 rounded-lg text-sm font-medium transition-all"
+
+                    data-prompt="Build learning modules for: Digital Marketing fundamentals - SEO, social media marketing, content strategy, analytics, and campaign optimization">
+
+              Digital Marketing
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <form id="chat-form" class="mb-6">
+
+          <div class="mb-4">
+
+            <textarea 
+
+              id="user-input" 
+
+              placeholder="Paste your curriculum outline, learning objectives, or describe the topic you want to create materials for..."
+
+              class="w-full border-2 border-gray-200 rounded-xl p-4 focus:outline-none focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all text-base min-h-[100px] resize-none"
+
+              rows="4"
+
+            ></textarea>
+
+            <div class="text-right text-sm text-gray-500 mt-1" id="char-count">0 characters</div>
+
+          </div>
+
+          <button 
+
+            type="submit" 
+
+            class="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 rounded-xl font-bold text-lg shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all"
+
+            id="generate-btn"
+
+          >
+
+            ✨ Generate Adaptive Learning Materials
+
+          </button>
+
+        </form>
+
+
+
+        <!-- Action buttons (initially hidden) -->
+
+        <div class="action-buttons mb-4" id="action-buttons">
+
+          <div class="flex gap-3 justify-center">
+
+            <button id="copy-btn" class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg">
+
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+
+              </svg>
+
+              Copy Content
+
+            </button>
+
+            <button id="pdf-btn" class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-lg font-medium transition-all flex items-center gap-2 shadow-lg">
+
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+
+              </svg>
+
+              Download PDF
+
+            </button>
+
+          </div>
+
+        </div>
+
+
+
+        <div class="bg-white border border-gray-200 rounded-xl p-6 min-h-[300px] max-h-[500px] overflow-y-auto" id="chat-box">
+
+          <div class="text-center text-gray-500 py-8" id="empty-state">
+
+            <div class="text-4xl mb-4">🎓</div>
+
+            <p class="text-lg font-medium">Your AI-generated learning materials will appear here</p>
+
+            <p class="text-gray-400 text-sm mt-2">Upload curriculum and watch the magic happen!</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <section class="py-16 bg-gray-50">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+
+      <h3 class="text-4xl font-bold text-center gradient-text mb-12">Success Stories</h3>
+
+      <div class="grid md:grid-cols-3 gap-8">
+
+        <div class="bg-white rounded-xl p-8 shadow-lg hover-lift fade-in">
+
+          <div class="text-2xl mb-4">⭐⭐⭐⭐⭐</div>
+
+          <p class="text-gray-700 mb-6 italic">"This GenAI platform revolutionized our curriculum delivery! Students are more engaged with personalized content. Achievement rates increased by 40%."</p>
+
+          <div class="border-t pt-4">
+
+            <h5 class="font-bold text-gray-800">Dr. Sarah Chen</h5>
+
+            <p class="text-blue-600 text-sm">Education Director, Future Academy</p>
+
+          </div>
+
+        </div>
+
+        
+
+        <div class="bg-white rounded-xl p-8 shadow-lg hover-lift fade-in">
+
+          <div class="text-2xl mb-4">⭐⭐⭐⭐⭐</div>
+
+          <p class="text-gray-700 mb-6 italic">"The adaptive learning materials generated from our basic outlines are incredible. Each student gets exactly what they need, when they need it."</p>
+
+          <div class="border-t pt-4">
+
+            <h5 class="font-bold text-gray-800">Prof. Michael Rodriguez</h5>
+
+            <p class="text-purple-600 text-sm">Computer Science, Tech University</p>
+
+          </div>
+
+        </div>
+
+        
+
+        <div class="bg-white rounded-xl p-8 shadow-lg hover-lift fade-in">
+
+          <div class="text-2xl mb-4">⭐⭐⭐⭐⭐</div>
+
+          <p class="text-gray-700 mb-6 italic">"Scalable personalization at its finest! We serve 50,000+ students with uniquely tailored content. The platform handles everything seamlessly."</p>
+
+          <div class="border-t pt-4">
+
+            <h5 class="font-bold text-gray-800">Emma Thompson</h5>
+
+            <p class="text-green-600 text-sm">Head of Digital Learning, Global EdTech</p>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+
+  <footer class="bg-gray-800 text-white py-12">
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+
+      <h4 class="text-xl font-bold mb-2">GenAI Adaptive Learning Platform</h4>
+
+      <p class="text-gray-400 mb-4">Transforming education through intelligent, personalized learning experiences</p>
+
+      <p class="text-gray-500">&copy; 2025 GenAI Adaptive Learning. All rights reserved.</p>
+
+    </div>
+
+  </footer>
+
+
+
+  <script>
+
+    const form = document.getElementById('chat-form');
+
+    const input = document.getElementById('user-input');
+
+    const chatBox = document.getElementById('chat-box');
+
+    const generateBtn = document.getElementById('generate-btn');
+
+    const charCount = document.getElementById('char-count');
+
+    const actionButtons = document.getElementById('action-buttons');
+
+    const copyBtn = document.getElementById('copy-btn');
+
+    const pdfBtn = document.getElementById('pdf-btn');
+
+    const emptyState = document.getElementById('empty-state');
+
+
+
+    let currentContent = '';
+
+    let currentTopic = '';
+
+    
+
+    // Mobile menu functionality
+
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    const hamburgerIcon = mobileMenuButton.querySelector('svg:first-child');
+
+    const closeIcon = mobileMenuButton.querySelector('svg:last-child');
+
+    
+
+    mobileMenuButton.addEventListener('click', () => {
+
+      mobileMenu.classList.toggle('hidden');
+
+      hamburgerIcon.classList.toggle('hidden');
+
+      closeIcon.classList.toggle('hidden');
+
+    });
+
+    
+
+    // Close mobile menu when clicking on a link
+
+    document.querySelectorAll('.mobile-menu-link').forEach(link => {
+
+      link.addEventListener('click', () => {
+
+        mobileMenu.classList.add('hidden');
+
+        hamburgerIcon.classList.remove('hidden');
+
+        closeIcon.classList.add('hidden');
+
+      });
+
+    });
+
+    
+
+    // Close mobile menu when clicking outside
+
+    document.addEventListener('click', (e) => {
+
+      if (!mobileMenu.contains(e.target) && !mobileMenuButton.contains(e.target)) {
+
+        mobileMenu.classList.add('hidden');
+
+        hamburgerIcon.classList.remove('hidden');
+
+        closeIcon.classList.add('hidden');
+
+      }
+
+    });
+
+
+
+    input.addEventListener('input', () => {
+
+      const count = input.value.length;
+
+      charCount.textContent = `${count} characters`;
+
+      if (count > 500) {
+
+        charCount.className = 'text-right text-sm text-orange-500 mt-1 font-medium';
+
+      } else {
+
+        charCount.className = 'text-right text-sm text-gray-500 mt-1';
+
+      }
+
+    });
+
+
+
+    document.querySelectorAll('.sample-btn').forEach(btn => {
+
+      btn.addEventListener('click', () => {
+
+        input.value = btn.dataset.prompt;
+
+        input.dispatchEvent(new Event('input'));
+
+        input.focus();
+
+      });
+
+    });
+
+
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const question = input.value.trim();
+      
+      if (!question) return;
+      if (question.length < 10) {
+        alert('Please provide a more detailed curriculum outline (at least 10 characters)');
+        return;
+      }
+
+      // Store the topic for PDF generation
+      currentTopic = extractTopicFromQuestion(question);
+
+      chatBox.innerHTML = '';
+      emptyState.style.display = 'none';
+      addMessage(question, 'user');
+      input.value = '';
+      charCount.textContent = '0 characters';
+
+      // Hide action buttons
+      actionButtons.classList.remove('show');
+
+      showLoading();
+
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = '⏳ Generating Materials...';
+
+      try {
+        const response = await fetch('http://localhost:5000/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ question })
+        });
+
+        const data = await response.json();
+        hideLoading();
+
+        if (data.answer) {
+          currentContent = data.answer;
+          addMessage(data.answer, 'bot', true);
+          // Show action buttons after content is generated
+          setTimeout(() => {
+            actionButtons.classList.add('show');
+          }, 500);
+        } else {
+          addMessage("Unable to generate materials. Please try again with a more detailed curriculum outline.", 'bot');
+        }
+      } catch (error) {
+        hideLoading();
+        addMessage("Connection error. Please ensure the AI server is running and try again.", 'bot');
+      } finally {
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '✨ Generate Adaptive Learning Materials';
+      }
+    });
+
+    // Copy functionality
+    copyBtn.addEventListener('click', async () => {
+      if (!currentContent) return;
+
+      try {
+        // Convert HTML to plain text for copying
+        const plainTextContent = htmlToPlainText(currentContent);
+        await navigator.clipboard.writeText(plainTextContent);
+        
+        // Visual feedback
+        const originalText = copyBtn.innerHTML;
+        copyBtn.innerHTML = '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Copied!';
+        copyBtn.classList.add('copy-success');
+        
+        setTimeout(() => {
+          copyBtn.innerHTML = originalText;
+          copyBtn.classList.remove('copy-success');
+        }, 2000);
+      } catch (err) {
+        alert('Failed to copy content. Please try selecting and copying manually.');
+      }
+    });
+
+    // PDF download functionality
+    pdfBtn.addEventListener('click', () => {
+      if (!currentContent) {
+        alert('No content available to generate PDF. Please generate some learning materials first.');
+        return;
+      }
+
+      console.log('Current content for PDF:', currentContent); // Debug log
+
+      const originalText = pdfBtn.innerHTML;
+      pdfBtn.innerHTML = '<svg class="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>Generating...';
+      
+      setTimeout(() => {
+        try {
+          generatePDF();
+        } catch (error) {
+          console.error('PDF generation error:', error);
+          alert('Error generating PDF. Please try again.');
+        }
+        pdfBtn.innerHTML = originalText;
+      }, 1000);
+    });
+
+    function extractTopicFromQuestion(question) {
+      // Extract topic from question for PDF filename
+      const match = question.match(/(?:for:|about:|on:)?\s*([^-\n]+)/i);
+      if (match) {
+        return match[1].trim().replace(/[^\w\s-]/g, '').substring(0, 50);
+      }
+      return 'Learning Materials';
+    }
+
+    function htmlToPlainText(html) {
+      // Create a temporary div to parse HTML
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      
+      // Convert specific elements to text equivalents
+      const headers = div.querySelectorAll('h1, h2, h3');
+      headers.forEach(header => {
+        header.textContent = '\n' + header.textContent.toUpperCase() + '\n' + '='.repeat(header.textContent.length) + '\n';
+      });
+
+      const lists = div.querySelectorAll('ul, ol');
+      lists.forEach(list => {
+        const items = list.querySelectorAll('li');
+        let listText = '\n';
+        items.forEach((item, index) => {
+          const prefix = list.tagName === 'OL' ? `${index + 1}. ` : '• ';
+          listText += prefix + item.textContent.trim() + '\n';
+        });
+        listText += '\n';
+        list.textContent = listText;
+      });
+
+      const specialBoxes = div.querySelectorAll('.learning-objective, .key-concept, .exercise-box, .tip-box');
+      specialBoxes.forEach(box => {
+        const title = box.querySelector('h3')?.textContent || '';
+        const content = box.textContent.replace(title, '').trim();
+        box.textContent = '\n' + title.toUpperCase() + '\n' + '-'.repeat(title.length) + '\n' + content + '\n';
+      });
+
+      // Get clean text and format
+      let text = div.textContent || div.innerText || '';
+      
+      // Clean up spacing
+      text = text.replace(/\n\s*\n\s*\n/g, '\n\n'); // Remove excessive line breaks
+      text = text.replace(/[ ]+/g, ' '); // Remove excessive spaces
+      text = text.trim();
+      
+      return text;
+    }
+
+    function generatePDF() {
+      console.log('Starting PDF generation with content:', currentContent?.substring(0, 100)); // Debug log
+      
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      
+      // PDF styling
+      const pageWidth = doc.internal.pageSize.width;
+      const pageHeight = doc.internal.pageSize.height;
+      const margin = 20;
+      const contentWidth = pageWidth - (margin * 2);
+      
+      // Header with gradient-like effect
+      doc.setFillColor(102, 126, 234);
+      doc.rect(0, 0, pageWidth, 35, 'F');
+      
+      doc.setTextColor(255, 255, 255);
+      doc.setFontSize(18);
+      doc.setFont('helvetica', 'bold');
+      doc.text('GenAI Learning Materials', margin, 20);
+      
+      doc.setFontSize(12);
+      doc.setFont('helvetica', 'normal');
+      doc.text(currentTopic || 'Generated Content', margin, 28);
+      
+      // Reset colors for content
+      doc.setTextColor(40, 40, 40);
+      doc.setFontSize(10);
+      doc.text(`Generated on: ${new Date().toLocaleDateString()}`, margin, 50);
+      
+      // Content processing
+      let yPosition = 65;
+      const lineHeight = 6;
+      
+      // Convert HTML to structured text for PDF
+      const structuredContent = convertHtmlToStructuredText(currentContent);
+      console.log('Structured content sections:', structuredContent.length); // Debug log
+      
+      if (structuredContent.length === 0) {
+        // Fallback: add the raw content as plain text
+        doc.setFontSize(11);
+        doc.setTextColor(55, 65, 81);
+        const fallbackText = currentContent.replace(/<[^>]*>/g, '').replace(/\s+/g, ' ').trim();
+        const lines = doc.splitTextToSize(fallbackText || 'No content available', contentWidth);
+        
+        lines.forEach((line) => {
+          if (yPosition > pageHeight - margin - 30) {
+            doc.addPage();
+            yPosition = margin + 10;
+          }
+          doc.text(line, margin, yPosition);
+          yPosition += lineHeight;
+        });
+      } else {
+        structuredContent.forEach((section, index) => {
+          console.log('Processing section:', section.type, section.text?.substring(0, 50)); // Debug log
+          
+          // Check if we need a new page
+          if (yPosition > pageHeight - margin - 30) {
+            doc.addPage();
+            yPosition = margin + 10;
+          }
+          
+          if (section.type === 'header') {
+            doc.setFontSize(section.level === 1 ? 14 : section.level === 2 ? 12 : 11);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(37, 99, 235);
+            
+            const headerLines = doc.splitTextToSize(section.text, contentWidth);
+            headerLines.forEach(line => {
+              if (yPosition > pageHeight - margin - 20) {
+                doc.addPage();
+                yPosition = margin + 10;
+              }
+              doc.text(line, margin, yPosition);
+              yPosition += lineHeight + 2;
+            });
+            yPosition += 3;
+            
+          } else if (section.type === 'special-box') {
+            // Special colored boxes for learning objectives, tips, etc.
+            const boxText = section.text || '';
+            const titleText = section.title || '';
+            
+            // Calculate box height
+            const titleLines = doc.splitTextToSize(titleText, contentWidth - 10);
+            const contentLines = doc.splitTextToSize(boxText, contentWidth - 10);
+            const boxHeight = (titleLines.length + contentLines.length + 2) * lineHeight + 10;
+            
+            // Check if box fits on page
+            if (yPosition + boxHeight > pageHeight - margin - 20) {
+              doc.addPage();
+              yPosition = margin + 10;
+            }
+            
+            doc.setFillColor(240, 249, 255);
+            doc.rect(margin - 5, yPosition - 8, contentWidth + 10, boxHeight, 'F');
+            
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'bold');
+            doc.setTextColor(29, 78, 216);
+            doc.text(titleText, margin, yPosition);
+            yPosition += lineHeight + 2;
+            
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(55, 65, 81);
+            contentLines.forEach(line => {
+              doc.text(line, margin + 5, yPosition);
+              yPosition += lineHeight;
+            });
+            yPosition += 8;
+            
+          } else if (section.type === 'list') {
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(55, 65, 81);
+            
+            section.items.forEach(item => {
+              const listText = `${section.ordered ? `${item.index}. ` : '• '}${item.text}`;
+              const listLines = doc.splitTextToSize(listText, contentWidth - 10);
+              listLines.forEach((line, lineIndex) => {
+                if (yPosition > pageHeight - margin - 20) {
+                  doc.addPage();
+                  yPosition = margin + 10;
+                }
+                doc.text(line, margin + (lineIndex === 0 ? 0 : 10), yPosition);
+                yPosition += lineHeight;
+              });
+              yPosition += 1;
+            });
+            yPosition += 3;
+            
+          } else {
+            // Regular paragraph
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            doc.setTextColor(55, 65, 81);
+            
+            const lines = doc.splitTextToSize(section.text || '', contentWidth);
+            lines.forEach(line => {
+              if (yPosition > pageHeight - margin - 20) {
+                doc.addPage();
+                yPosition = margin + 10;
+              }
+              doc.text(line, margin, yPosition);
+              yPosition += lineHeight;
+            });
+            yPosition += 4;
+          }
+        });
+      }
+      
+      // Footer for all pages
+      const totalPages = doc.internal.getNumberOfPages();
+      for (let i = 1; i <= totalPages; i++) {
+        doc.setPage(i);
+        doc.setFontSize(8);
+        doc.setTextColor(120, 120, 120);
+        doc.text(
+          `Page ${i} of ${totalPages} | Generated by GenAI Learning Platform`, 
+          margin, 
+          pageHeight - 8
+        );
+      }
+      
+      // Download the PDF
+      const filename = `${(currentTopic || 'learning_materials').replace(/[^\w\s-]/g, '').replace(/\s+/g, '_')}_learning_materials.pdf`;
+      console.log('Saving PDF as:', filename); // Debug log
+      doc.save(filename);
+    }
+
+    function convertHtmlToStructuredText(html) {
+      console.log('Converting HTML:', html); // Debug log
+      
+      if (!html || html.trim() === '') {
+        console.log('No HTML content provided');
+        return [{
+          type: 'paragraph',
+          text: 'No content available to generate PDF.'
+        }];
+      }
+
+      const div = document.createElement('div');
+      div.innerHTML = html;
+      const sections = [];
+      
+      // Helper function to extract text from any element
+      const extractText = (element) => {
+        if (!element) return '';
+        
+        // Get all text content, preserving line breaks
+        let text = '';
+        const walker = document.createTreeWalker(
+          element,
+          NodeFilter.SHOW_TEXT,
+          null,
+          false
+        );
+        
+        let node;
+        while (node = walker.nextNode()) {
+          if (node.textContent.trim()) {
+            text += node.textContent.trim() + ' ';
+          }
+        }
+        
+        return text.trim();
+      };
+      
+      // Process each element recursively
+      const processElement = (element) => {
+        if (!element || !element.tagName) return;
+        
+        const tagName = element.tagName.toLowerCase();
+        const textContent = extractText(element);
+        
+        console.log('Processing element:', tagName, textContent.substring(0, 50)); // Debug log
+        
+        if (['h1', 'h2', 'h3'].includes(tagName)) {
+          sections.push({
+            type: 'header',
+            level: parseInt(tagName.charAt(1)),
+            text: textContent
+          });
+        } else if (element.classList?.contains('learning-objective') || 
+                   element.classList?.contains('key-concept') || 
+                   element.classList?.contains('exercise-box') || 
+                   element.classList?.contains('tip-box')) {
+          const title = element.querySelector('h3')?.textContent?.trim() || 
+                       (element.className.includes('learning-objective') ? 'Learning Objectives' :
+                        element.className.includes('key-concept') ? 'Key Concepts' :
+                        element.className.includes('exercise-box') ? 'Practice Exercise' : 'Tip');
+          const content = textContent.replace(title, '').trim();
+          sections.push({
+            type: 'special-box',
+            title: title,
+            text: content
+          });
+        } else if (['ul', 'ol'].includes(tagName)) {
+          const items = Array.from(element.querySelectorAll('li')).map((li, index) => ({
+            index: index + 1,
+            text: extractText(li)
+          }));
+          if (items.length > 0) {
+            sections.push({
+              type: 'list',
+              ordered: tagName === 'ol',
+              items: items
+            });
+          }
+        } else if (tagName === 'p' && textContent) {
+          sections.push({
+            type: 'paragraph',
+            text: textContent
+          });
+        } else if (element.children && element.children.length > 0) {
+          // Process children
+          Array.from(element.children).forEach(child => processElement(child));
+        } else if (textContent && !['script', 'style', 'br'].includes(tagName)) {
+          sections.push({
+            type: 'paragraph',
+            text: textContent
+          });
+        }
+      };
+      
+      // Process all children
+      if (div.children.length > 0) {
+        Array.from(div.children).forEach(child => processElement(child));
+      } else {
+        // Fallback: if no structured content, just get all text
+        const allText = extractText(div);
+        if (allText) {
+          // Split into paragraphs
+          const paragraphs = allText.split(/\n\s*\n/).filter(p => p.trim());
+          paragraphs.forEach(paragraph => {
+            if (paragraph.trim()) {
+              sections.push({
+                type: 'paragraph',
+                text: paragraph.trim()
+              });
+            }
+          });
+        }
+      }
+      
+      console.log('Generated sections:', sections.length); // Debug log
+      
+      // If still no content, create a fallback
+      if (sections.length === 0) {
+        sections.push({
+          type: 'paragraph',
+          text: 'Content was generated but could not be processed for PDF. Please try copying the text instead.'
+        });
+      }
+      
+      return sections;
+    }
+
+    function addMessage(text, sender, isHTML = false) {
+      const msgDiv = document.createElement('div');
+      msgDiv.className = 'mb-4';
+
+      if (sender === 'user') {
+        msgDiv.innerHTML = `
+          <div class="flex justify-end">
+            <div class="bg-blue-600 text-white rounded-lg px-4 py-3 max-w-[80%]">
+              <div class="font-semibold mb-1 flex items-center text-sm">
+                <span class="mr-2">👤</span> You
+              </div>
+              <div>${text}</div>
+            </div>
+          </div>
+        `;
+      } else {
+        const formattedText = formatAIContent(text);
+        msgDiv.innerHTML = `
+          <div class="flex justify-start">
+            <div class="bg-gray-50 border border-gray-200 text-gray-800 rounded-lg px-6 py-4 max-w-[90%] shadow-sm">
+              <div class="font-semibold mb-3 flex items-center text-sm text-blue-600">
+                <span class="mr-2">🤖</span> AI Learning Generator
+              </div>
+              <div class="ai-content pdf-content">${formattedText}</div>
+            </div>
+          </div>
+        `;
+      }
+
+      chatBox.appendChild(msgDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function formatAIContent(text) {
+      // Enhanced formatting for ChatGPT-like display
+      let formatted = text;
+
+      // Convert markdown-style headers
+      formatted = formatted.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+      formatted = formatted.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+      formatted = formatted.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+      // Convert **bold** text
+      formatted = formatted.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+      // Convert learning objectives (special formatting)
+      formatted = formatted.replace(/^Learning Objectives?:(.+?)(?=\n\n|\n[A-Z]|$)/gms, 
+        '<div class="learning-objective"><h3 style="margin-top:0; color:#1e40af;">🎯 Learning Objectives</h3>$1</div>');
+
+      // Convert key concepts
+      formatted = formatted.replace(/^Key Concepts?:(.+?)(?=\n\n|\n[A-Z]|$)/gms, 
+        '<div class="key-concept"><h3 style="margin-top:0; color:#d97706;">💡 Key Concepts</h3>$1</div>');
+
+      // Convert exercises
+      formatted = formatted.replace(/^(?:Exercise|Practice|Activity)(?:s)?:(.+?)(?=\n\n|\n[A-Z]|$)/gms, 
+        '<div class="exercise-box"><h3 style="margin-top:0; color:#059669;">📝 Practice Exercise</h3>$1</div>');
+
+      // Convert tips
+      formatted = formatted.replace(/^(?:Tip|Note|Important)(?:s)?:(.+?)(?=\n\n|\n[A-Z]|$)/gms, 
+        '<div class="tip-box"><h3 style="margin-top:0; color:#7c3aed;">💭 Tip</h3>$1</div>');
+
+      // Convert numbered lists
+      formatted = formatted.replace(/^(\d+)\.\s+(.+)$/gm, '<li><strong>$1.</strong> $2</li>');
+      formatted = formatted.replace(/(<li>.*<\/li>)/gs, '<ol>$1</ol>');
+      formatted = formatted.replace(/<\/ol>\s*<ol>/g, '');
+
+      // Convert bullet points
+      formatted = formatted.replace(/^[-•*]\s+(.+)$/gm, '<li>$1</li>');
+      formatted = formatted.replace(/(<li>(?!<strong>\d+).*<\/li>)/gs, '<ul>$1</ul>');
+      formatted = formatted.replace(/<\/ul>\s*<ul>/g, '');
+
+      // Convert code blocks
+      formatted = formatted.replace(/```(\w+)?\n([\s\S]+?)```/g, '<pre><code>$2</code></pre>');
+      formatted = formatted.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+      // Convert tables (simple markdown tables)
+      formatted = formatted.replace(/\|(.+)\|/g, (match, content) => {
+        const cells = content.split('|').map(cell => cell.trim());
+        const cellTags = cells.map(cell => cell.includes('---') ? '' : `<td>${cell}</td>`).join('');
+        return cells.some(cell => cell.includes('---')) ? '' : `<tr>${cellTags}</tr>`;
+      });
+      formatted = formatted.replace(/(<tr>.*<\/tr>)/gs, '<table>$1</table>');
+      formatted = formatted.replace(/<\/table>\s*<table>/g, '');
+
+      // Add table headers
+      formatted = formatted.replace(/<table>(<tr>.*?<\/tr>)/, '<table><thead>$1</thead><tbody>');
+      formatted = formatted.replace(/<\/table>/g, '</tbody></table>');
+      formatted = formatted.replace(/<thead><tr>(.*?)<\/tr><\/thead>/g, (match, content) => {
+        const headerContent = content.replace(/<td>/g, '<th>').replace(/<\/td>/g, '</th>');
+        return `<thead><tr>${headerContent}</tr></thead>`;
+      });
+
+      // Highlight important terms
+      formatted = formatted.replace(/\b([A-Z][a-z]+ [A-Z][a-z]+)\b/g, '<span class="highlight">$1</span>');
+
+      // Convert paragraphs
+      formatted = formatted.replace(/\n\n/g, '</p><p>');
+      formatted = '<p>' + formatted + '</p>';
+      
+      // Clean up empty paragraphs and fix formatting
+      formatted = formatted.replace(/<p><\/p>/g, '');
+      formatted = formatted.replace(/<p>(<h[1-6])/g, '$1');
+      formatted = formatted.replace(/(<\/h[1-6]>)<\/p>/g, '$1');
+      formatted = formatted.replace(/<p>(<div)/g, '$1');
+      formatted = formatted.replace(/(<\/div>)<\/p>/g, '$1');
+      formatted = formatted.replace(/<p>(<ul|<ol|<table)/g, '$1');
+      formatted = formatted.replace(/(<\/ul>|<\/ol>|<\/table>)<\/p>/g, '$1');
+      formatted = formatted.replace(/<p><pre>/g, '<pre>');
+      formatted = formatted.replace(/<\/pre><\/p>/g, '</pre>');
+
+      return formatted;
+    }
+
+    function showLoading() {
+      const loadingDiv = document.createElement('div');
+      loadingDiv.id = 'loading';
+      loadingDiv.innerHTML = `
+        <div class="flex justify-start">
+          <div class="bg-gray-100 text-gray-600 rounded-lg px-4 py-3">
+            <div class="flex items-center space-x-2">
+              <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style="animation-delay: 0.1s"></div>
+              <div class="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style="animation-delay: 0.2s"></div>
+              <span class="ml-2">Analyzing curriculum and generating materials...</span>
+            </div>
+          </div>
+        </div>
+      `;
+      chatBox.appendChild(loadingDiv);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function hideLoading() {
+      const loading = document.getElementById('loading');
+      if (loading) loading.remove();
+    }
+
+    // Smooth scrolling for navigation links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Intersection Observer for fade-in animations
+    const observeElements = () => {
+      const elements = document.querySelectorAll('.fade-in');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      elements.forEach(el => observer.observe(el));
+    };
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', observeElements);
+  </script>
+
+</body>
+</html>

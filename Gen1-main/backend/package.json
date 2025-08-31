@@ -1,0 +1,19 @@
+{
+  "name": "genai-learning-backend",
+  "version": "1.0.0",
+  "description": "Backend API for GenAI Learning Platform",
+  "main": "server.js",
+  "scripts": {
+    "main": "index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.17.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^4.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4"
+  }
+}

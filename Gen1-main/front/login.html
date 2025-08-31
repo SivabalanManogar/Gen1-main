@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Page</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+
+    body {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f0f2f5;
+    }
+
+    .container {
+      display: flex;
+      width: 90%;
+      max-width: 900px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+      overflow: hidden;
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .left-side {
+      flex: 1;
+      background: linear-gradient(135deg, #4285F4, #34A853, #FBBC05, #EA4335);
+      color: white;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .left-side h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      animation: slideInLeft 1s ease;
+    }
+
+    .left-side p {
+      font-size: 1.1rem;
+      line-height: 1.5;
+      animation: slideInLeft 1.2s ease;
+    }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .right-side {
+      flex: 1;
+      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .login-box {
+      width: 100%;
+      max-width: 300px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .login-box h2 {
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    #googleLogin {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background-color: #ffffff;
+      color: #444;
+      border: 1px solid #ccc;
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.3s ease;
+    }
+
+    #googleLogin img { width: 20px; height: 20px; }
+
+    #googleLogin:hover {
+      background-color: #f7f7f7;
+      border-color: #999;
+      transform: scale(1.03);
+    }
+
+    @media (max-width: 768px) {
+      .container { flex-direction: column; }
+      .left-side, .right-side { padding: 30px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Left content / branding -->
+    <div class="left-side">
+      <h1>Welcome to Career Assistance</h1>
+      <p>
+        Explore your potential, find the right career path, and improve your skills. 
+        Login with Google to start your journey today!
+      </p>
+    </div>
+
+    <!-- Right login card -->
+    <div class="right-side">
+      <div class="login-box">
+        <h2>Login with Google</h2>
+        <button id="googleLogin">
+          <img src="https://www.svgrepo.com/show/355037/google.svg" alt="Google logo">
+          Sign in with Google
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK (Modular v10) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.12.3/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAnePhGeW4h1pwu5tMrJ-44UB-YhWpBMMY",
+      authDomain: "gen2-e3d56.firebaseapp.com",
+      projectId: "gen2-e3d56",
+      storageBucket: "gen2-e3d56.appspot.com",
+      messagingSenderId: "222540146388",
+      appId: "1:222540146388:web:34f87b87aa799149aabd41"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    document.getElementById("googleLogin").addEventListener("click", () => {
+      signInWithPopup(auth, provider)
+        .then((result) => {
+          console.log("User logged in:", result.user);
+          window.location.href = "index.html";
+        })
+        .catch((error) => {
+          console.error("Error:", error.message);
+        });
+    });
+  </script>
+</body>
+</html>

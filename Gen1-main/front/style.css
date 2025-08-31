@@ -1,0 +1,65 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f6f7fb;
+  color: #111;
+}
+
+header {
+  background: linear-gradient(90deg, #2563eb, #7c3aed);
+  color: #fff;
+  padding: 16px;
+  text-align: center;
+}
+
+main {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 16px;
+  display: grid;
+  gap: 20px;
+}
+
+section {
+  background: #fff;
+  padding: 16px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+form label {
+  display: block;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+form input, form textarea, form select {
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+form button {
+  margin-top: 14px;
+  padding: 10px;
+  width: 100%;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background: #1d4ed8;
+}
+
+.lesson {
+  margin-top: 12px;
+  padding: 10px;
+  border: 1px solid #eee;
+  border-radius: 6px;
+}
